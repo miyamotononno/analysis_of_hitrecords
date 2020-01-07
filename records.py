@@ -8,13 +8,17 @@ class MySpotify:
     self.username = config.USER_NAME
     self.client_credentials_manager = spotipy.oauth2.SpotifyClientCredentials(config.CLIENT_ID, config.CLIENT_SECRET)
     self.sp = spotipy.Spotify(client_credentials_manager=self.client_credentials_manager)
+    self.tracks = []
+    self.playlist = []
   
   def search_playlists(self, query = ''):
     results = self.sp.search(q=query, type='playlist')['playlists']['items']
     if len(results) == 0:
       return []
 
-    return [ {'playlist_name': item['name'], 'playlist_id': item['id'] } for item in results]
+    playlist = [ {'playlist_name': item['name'], 'playlist_id': item['id'] } for item in results]
+    self.playlist = playlist
+    return playlist
 
   def _unique(self, l, keyname):
     targets = [item[keyname] for item in l]
@@ -26,9 +30,7 @@ class MySpotify:
 
     return new_list
 
-
-  def get_tracks_from_playlists(self):
-    querys = ['playlist: Japan&playlist: Top', 'playlist: Japan&playlist: 2019']
+  def get_tracks_from_playlists(self, querys):
     results = []
     for q in querys:
       r = self.search_playlists(q)
@@ -54,10 +56,11 @@ class MySpotify:
       }
       data.append(obj)
     
+    self.tracks = data
     return data
 
   def get_audio_details(self):
-    data = self.get_tracks_from_playlists()
+    data = self.get_tracks_from_playlists(['playlist: Japan&playlist: Top', 'playlist: Japan&playlist: 2019', 'playlist: Japan&playlist: 2020'])
     data = self._unique(data, 'track_id')
     if len(data) == 0:
       return
@@ -78,7 +81,6 @@ class MySpotify:
       audios.extend(ret)
       uri_ids = []
 
-
     for idx, song in enumerate(audios):
       time = song['duration_ms']
       second = time // 1000
@@ -95,4 +97,4 @@ class MySpotify:
 if __name__ == "__main__":
     sp = MySpotify()
     r = sp.get_audio_details()
-    sp.write_csv(['track_id', 'track_name', 'main_artist_name', 'duration_second'], r)
+    # sp.write_csv(['track_id', 'track_name', 'main_artist_name', 'duration_second'], r)

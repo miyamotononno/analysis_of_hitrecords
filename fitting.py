@@ -22,7 +22,7 @@ class Gaussian_Fitting:
     track_durations = sorted([item[3] for item in track_info])
     return track_durations
     
-  def get_mean_and_stdev(self, data, width=40, range=[0, 600]):
+  def get_mean_and_stdev(self, data, width=60, range=[0, 600]):
     hist_1, bins = np.histogram(data, width, range=(range[0],range[1]))
     bins = bins[:-1]
     param = norm.fit(data)
@@ -32,7 +32,7 @@ class Gaussian_Fitting:
     self.stdev = param[1]
 
   def _gaussian_func(self, x, a, mu, sigma):
-      return a*np.exp(-(x-mu)**2/(2*sigma**2))
+    return a*np.exp(-(x-mu)**2/(2*sigma**2))
 
   def curve_fitting(self):
     param_ini = [80,self.mean, self.stdev]
@@ -51,9 +51,12 @@ class Gaussian_Fitting:
     _, ax = plt.subplots()
     ax.bar(self.X,self.Y,width=100/100,alpha=0.5,color='m',align='edge')
     ax.plot(self.X,self.fitting,'k')
+    ax.annotate("μ="+str(np.round(self.mean,3)), xy=(0.6, 0.8), xycoords='axes fraction')
+    ax.annotate("σ="+str(np.round(self.stdev,3)), xy=(0.6, 0.7), xycoords='axes fraction')
     ax.annotate("$R^2$="+str(np.round(self.r_squared,3)), xy=(0.6, 0.6), xycoords='axes fraction')
     ax.set_xlabel('x')
     ax.set_ylabel('y')
+    ax.set_xticks(np.arange(0, 540 + 1, 60))
     plt.savefig('graph.png')
 
 if __name__ == "__main__":
