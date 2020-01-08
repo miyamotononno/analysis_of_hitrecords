@@ -49,13 +49,13 @@ class Gaussian_Fitting:
   def plot(self):
     plt.rcParams['font.size'] = 14
     _, ax = plt.subplots()
-    ax.bar(self.X,self.Y,width=100/100,alpha=0.5,color='m',align='edge')
+    ax.bar(self.X,self.Y,width=3,align='edge')
     ax.plot(self.X,self.fitting,'k')
     ax.annotate("μ="+str(np.round(self.mean,3)), xy=(0.6, 0.8), xycoords='axes fraction')
     ax.annotate("σ="+str(np.round(self.stdev,3)), xy=(0.6, 0.7), xycoords='axes fraction')
     ax.annotate("$R^2$="+str(np.round(self.r_squared,3)), xy=(0.6, 0.6), xycoords='axes fraction')
-    ax.set_xlabel('x')
-    ax.set_ylabel('y')
+    ax.set_xlabel('time duration(s)')
+    ax.set_ylabel('count')
     ax.set_xticks(np.arange(0, 540 + 1, 60))
     plt.savefig('graph.png')
 
