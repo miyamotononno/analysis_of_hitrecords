@@ -46,7 +46,7 @@ class Gaussian_Fitting:
     tss = np.sum((self.Y-np.mean(self.Y))**2)#total sum of squares = tss
     self.r_squared = 1 - (rss / tss)
 
-  def plot(self):
+  def plot(self, file_name='graph.png'):
     plt.rcParams['font.size'] = 14
     _, ax = plt.subplots()
     ax.bar(self.X,self.Y,width=3,align='edge')
@@ -57,14 +57,13 @@ class Gaussian_Fitting:
     ax.set_xlabel('time duration(s)')
     ax.set_ylabel('count')
     ax.set_xticks(np.arange(0, 540 + 1, 60))
-    plt.savefig('graph.png')
+    plt.savefig(file_name)
 
 if __name__ == "__main__":
     gf = Gaussian_Fitting()
-    gf.read_csv()
     data = gf.read_csv()
     gf.get_mean_and_stdev(data)
     gf.curve_fitting()
     gf.residuals()
-    gf.plot()
+    gf.plot('graph.png')
 
