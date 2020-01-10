@@ -17,7 +17,7 @@ USER_NAME = '-----------'
 
 ## ベイズ推定について
 
-![スクリーンショット 2020-01-10 23 32 55](https://user-images.githubusercontent.com/32972443/72161997-7b37f600-3404-11ea-8f85-ed375e5d4022.png)
+![スクリーンショット 2020-01-10 23 53 58](https://user-images.githubusercontent.com/32972443/72162141-bf2afb00-3404-11ea-935c-45717877d89a.png)
 
 
 ## 結果
