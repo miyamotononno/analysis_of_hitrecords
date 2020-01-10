@@ -55,22 +55,20 @@ class Prediction:
   def _questionnaire(self):
     """アンケート結果を集計してまとめているだけ"""
 
-    q0_list = [240, 210, 210, 165, 220, 253, 200, 210, 210, 150, 210, 230, 140, 180, 210, 280, 150, 270, 200, 150, 240, 210, 120, 120, 140, 290, 160, 150, 210]
     q1_list = [220, 198, 120, 180, 130, 120, 150]
     q2_list = [30, 90, 90, 180]
     q3_list = [140, 80, 30, 60, 30, 20, 30]
     q4_list = [30, 30, 30, 20]
     q5_list = [30, 120, 120, 60, 15]
 
-    q0_mean = np.median(q0_list)
     q1_mean = np.median(q1_list) + 60*1
     q2_mean = np.median(q2_list) + 60*2
     q3_mean = np.median(q3_list) + 60*3
     q4_mean = np.median(q4_list) + 60*4
     q5_mean = np.median(q5_list) + 60*5
 
-    X = [0, 60, 120, 180, 240, 300]
-    Y = [q0_mean, q1_mean, q2_mean, q3_mean, q4_mean, q5_mean]
+    X = [60, 120, 180, 240, 300]
+    Y = [q1_mean, q2_mean, q3_mean, q4_mean, q5_mean]
     return X, Y
 
   def plot(self, file_name='prediction.png'):
@@ -88,7 +86,7 @@ class Prediction:
     plt.plot(T, T_stars)
 
     q_x, q_y = self._questionnaire()
-    ax.scatter(q_x, q_y)
+    ax.scatter(q_x, q_y, c='black')
     ax.set_xlabel('t values')
     ax.set_ylabel('predicted t_total')
     ax.set_xticks(np.arange(0, 300 + 1, 60))
