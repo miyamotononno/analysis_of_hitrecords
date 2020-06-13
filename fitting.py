@@ -17,12 +17,16 @@ class Gaussian_Fitting:
     self.r_squared = 0
 
   def read_csv(self):
+    """csvの読み込み"""
+
     df_tracks= pd.read_csv('./data.csv', header=0)
     track_info = df_tracks.values.tolist()
     track_durations = sorted([item[3] for item in track_info])
     return track_durations
     
-  def get_mean_and_stdev(self, data, width=60, range=[0, 600]):
+  def set_mean_and_stdev(self, data, width=60, range=[0, 600]):
+    """dataの平均と標準偏差をセットする"""
+
     hist_1, bins = np.histogram(data, width, range=(range[0],range[1]))
     bins = bins[:-1]
     param = norm.fit(data)
@@ -32,21 +36,28 @@ class Gaussian_Fitting:
     self.stdev = param[1]
 
   def _gaussian_func(self, x, a, mu, sigma):
+    """ガウス関数"""
     return a*np.exp(-(x-mu)**2/(2*sigma**2))
 
   def curve_fitting(self):
+    """データ分布を関数でフィッティングする"""
+
     param_ini = [80,self.mean, self.stdev]
     popt, _ = curve_fit(self._gaussian_func, self.X, self.Y, p0=param_ini)
     fitting = self._gaussian_func(self.X, popt[0],popt[1],popt[2])
     self.fitting = fitting
 
-  def residuals(self):
+  def set_residuals(self):
+    """残差のセット"""
+
     residuals =  self.Y - self.fitting
     rss = np.sum(residuals**2)#residual sum of squares = rss
     tss = np.sum((self.Y-np.mean(self.Y))**2)#total sum of squares = tss
     self.r_squared = 1 - (rss / tss)
 
   def plot(self, file_name='graph.png'):
+    """fileにプロットする"""
+
     plt.rcParams['font.size'] = 14
     _, ax = plt.subplots()
     ax.bar(self.X,self.Y,width=3,align='edge')
@@ -62,8 +73,8 @@ class Gaussian_Fitting:
 if __name__ == "__main__":
     gf = Gaussian_Fitting()
     data = gf.read_csv()
-    gf.get_mean_and_stdev(data)
+    gf.set_mean_and_stdev(data)
     gf.curve_fitting()
-    gf.residuals()
+    gf.set_residuals()
     gf.plot('graph.png')
 

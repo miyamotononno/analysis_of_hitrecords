@@ -12,6 +12,8 @@ class MySpotify:
     self.playlist = []
   
   def search_playlists(self, query = ''):
+    """playlistのサーチ"""
+
     results = self.sp.search(q=query, type='playlist')['playlists']['items']
     if len(results) == 0:
       return []
@@ -21,6 +23,8 @@ class MySpotify:
     return playlist
 
   def _unique(self, l, keyname):
+    """リストlをkeyで重複を除く作業"""
+
     targets = [item[keyname] for item in l]
     new_targets = list(set(targets))
     new_list = []
@@ -31,6 +35,8 @@ class MySpotify:
     return new_list
 
   def get_tracks_from_playlists(self, querys):
+    """複数のplaylistから楽曲を得る"""
+
     results = []
     for q in querys:
       r = self.search_playlists(q)
@@ -59,11 +65,14 @@ class MySpotify:
     self.tracks = data
     return data
 
-  def get_audio_details(self):
-    data = self.get_tracks_from_playlists(['playlist: Japan&playlist: Top', 'playlist: Japan&playlist: 2019', 'playlist: Japan&playlist: 2020'])
+  def get_audio_details(self, querys):
+    """playlistのquerysからplaylistを取得し、さらにそれらに含まれる全trackの詳細を取得する"""
+
+    data = self.get_tracks_from_playlists(querys)
     data = self._unique(data, 'track_id')
     if len(data) == 0:
       return
+
     track_ids = [item['track_id'] for item in data]
     audios = []
     uri_ids = []
@@ -89,6 +98,8 @@ class MySpotify:
     return data
 
   def write_csv(self, header, data):
+    """dataをcsvに書きこむ"""
+
     with open('data.csv', 'w') as f:
       writer = csv.DictWriter(f, header)
       writer.writeheader()
@@ -96,5 +107,6 @@ class MySpotify:
 
 if __name__ == "__main__":
     sp = MySpotify()
-    r = sp.get_audio_details()
-    # sp.write_csv(['track_id', 'track_name', 'main_artist_name', 'duration_second'], r)
+    querys = ['playlist: Japan&playlist: Top', 'playlist: Japan&playlist: 2019', 'playlist: Japan&playlist: 2020']
+    r = sp.get_audio_details(querys)
+    sp.write_csv(['track_id', 'track_name', 'main_artist_name', 'duration_second'], r)
